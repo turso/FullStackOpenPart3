@@ -24,12 +24,25 @@ let persons = [
   }
 ];
 
+const date = new Date();
+
+const listSize = persons.length;
+
+const info = `
+puhelinluettelossa on ${listSize} henkilön tiedot <br><br>
+${date}
+`;
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
 });
 
 app.get('/api/persons', (req, res) => {
   res.json(persons);
+});
+
+app.get('/info', (req, res) => {
+  res.send(info);
 });
 
 const port = 3001;
