@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
 
 let persons = [
   {
@@ -60,6 +63,28 @@ app.delete('/api/persons/:id', (req, res) => {
   persons = persons.filter(person => person.id !== id);
 
   res.status(204).end();
+});
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+  const randomNumb = Math.floor(Math.random() * 1000000 + 1);
+  console.log(body);
+
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'name is missing' });
+  } else if (body.number === undefined) {
+    return response.status(400).json({ error: 'number is missing' });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: randomNumb
+  };
+
+  persons = persons.concat(person);
+
+  res.json(person);
 });
 
 const port = 3001;
