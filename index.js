@@ -4,7 +4,11 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 app.use(bodyParser.json());
-app.use(morgan('tiny'));
+app.use(morgan(':method :url :res :status :response-time[4]'));
+
+morgan.token('res', function(res) {
+  return JSON.stringify(res.body);
+});
 
 let persons = [
   {
@@ -36,6 +40,10 @@ const info = `
 puhelinluettelossa on ${listSize} henkilön tiedot <br><br>
 ${date}
 `;
+
+// morgan.token('responseBody', function(req, res) {
+//   return JSON.stringify({});
+// });
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
