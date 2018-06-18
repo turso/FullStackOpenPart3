@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(morgan(':method :url :res :status :response-time[4]'));
@@ -40,10 +43,6 @@ const info = `
 puhelinluettelossa on ${listSize} henkilön tiedot <br><br>
 ${date}
 `;
-
-// morgan.token('responseBody', function(req, res) {
-//   return JSON.stringify({});
-// });
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
