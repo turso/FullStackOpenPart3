@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 // korvaa url oman tietokantasi urlilla. ethän laita salasanaa Gothubiin!
-// const url = 'mongodb://fullstackUser:kokopakka96@ds163610.mlab.com:63610/fullstackopen-people';
-const url = 'mongodb://testi:testi96@ds163610.mlab.com:63610/fullstackopen-people';
 
 mongoose.connect(url);
 
