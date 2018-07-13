@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person');
 
 app.use(cors());
 app.use(express.static('build'));
@@ -14,54 +15,29 @@ morgan.token('res', function(res) {
   return JSON.stringify(res.body);
 });
 
-let persons = [
-  {
-    name: 'Arto Hellas',
-    number: '040-123456',
-    id: 1
-  },
-  {
-    name: 'Martti Tienari',
-    number: '040-123456',
-    id: 2
-  },
-  {
-    name: 'Arto Järvinen',
-    number: '040-123456',
-    id: 3
-  },
-  {
-    name: 'Herra Kuu',
-    number: '040-12334436',
-    id: 4
-  }
-];
-
-const date = new Date();
-
-const listSize = persons.length;
-const info = `
-puhelinluettelossa on ${listSize} henkilön tiedot <br><br>
-${date}
-`;
+const formatPerson = person => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  };
+};
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
 });
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  Person.find({}).then(people => {
+    res.json(people.map(formatPerson));
+    mongoose.connection.close();
+  });
 });
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(person => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  Person.findById(req.params.id).then(person => {
+    res.json(formatPerson(person));
+  });
 });
 
 app.get('/info', (req, res) => {
@@ -77,24 +53,24 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
-  const randomNumb = Math.floor(Math.random() * 1000000 + 1);
+  // const randomNumb = Math.floor(Math.random() * 1000000 + 1);
   console.log(body);
 
   if (body.name === undefined) {
-    return response.status(400).json({ error: 'name is missing' });
+    return res.status(400).json({ error: 'name is missing' });
   } else if (body.number === undefined) {
-    return response.status(400).json({ error: 'number is missing' });
+    return res.status(400).json({ error: 'number is missing' });
   }
 
-  const person = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: randomNumb
-  };
+    number: body.number
+    // id: randomNumb
+  });
 
-  persons = persons.concat(person);
-
-  res.json(person);
+  person.save().then(savedPerson => {
+    res.json(formatPerson(savedPerson));
+  });
 });
 
 const port = 3001;
