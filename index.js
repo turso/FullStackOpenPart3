@@ -45,7 +45,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
-  // const randomNumb = Math.floor(Math.random() * 1000000 + 1);
   console.log(body);
 
   if (body.name === undefined) {
@@ -57,11 +56,10 @@ app.post('/api/persons', (req, res) => {
   const person = new Person({
     name: body.name,
     number: body.number
-    // id: randomNumb
   });
 
   person.save().then(savedPerson => {
-    res.json(formatPerson(savedPerson));
+    res.json(Person.format(savedPerson));
   });
 });
 
