@@ -15,28 +15,20 @@ morgan.token('res', function(res) {
   return JSON.stringify(res.body);
 });
 
-const formatPerson = person => {
-  return {
-    name: person.name,
-    number: person.number,
-    id: person._id
-  };
-};
-
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
 });
 
 app.get('/api/persons', (req, res) => {
-  Person.find({}).then(people => {
-    res.json(people.map(formatPerson));
-    mongoose.connection.close();
+  Person.find({}).then(persons => {
+    res.json(persons.map(Person.format));
+    // mongoose.connection.close();
   });
 });
 
 app.get('/api/persons/:id', (req, res) => {
   Person.findById(req.params.id).then(person => {
-    res.json(formatPerson(person));
+    res.json(Person.format(person));
   });
 });
 
