@@ -61,7 +61,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
-  console.log(body);
+  console.log('body', body);
 
   if (body.name === undefined) {
     return res.status(400).json({ error: 'name is missing' });
@@ -77,6 +77,24 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(Person.format(savedPerson));
   });
+});
+
+app.put('/api/persons/:id', (req, res) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number
+  };
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(Person.format(updatedPerson));
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).send({ error: 'malformatted id' });
+    });
 });
 
 const port = 3001;
