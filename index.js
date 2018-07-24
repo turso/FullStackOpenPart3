@@ -15,6 +15,12 @@ morgan.token('res', function(res) {
   return JSON.stringify(res.body);
 });
 
+const date = new Date();
+
+// const listSize = persons.length;
+
+// const info = `puhelinluettelossa on ${listSize} henkilön tiedot <br><br>${date}`;
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
 });
@@ -46,7 +52,10 @@ app.get('/api/persons/:id', (req, res) => {
 });
 
 app.get('/info', (req, res) => {
-  res.send(info);
+  Person.count({}, function(err, count) {
+    const info = `puhelinluettelossa on ${count} henkilön tiedot <br><br>${date}`;
+    res.send(info);
+  });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
