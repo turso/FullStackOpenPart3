@@ -1,1 +1,1 @@
-url: https://fullstackopen-thohfcgmen.now.sh/
+url: https://fullstackopen-gdhptfixsp.now.sh
