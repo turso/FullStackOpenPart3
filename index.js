@@ -70,7 +70,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
-  console.log('body', body);
 
   if (body.name === undefined) {
     return res.status(400).json({ error: 'name is missing' });
@@ -83,9 +82,21 @@ app.post('/api/persons', (req, res) => {
     number: body.number
   });
 
-  person.save().then(savedPerson => {
-    res.json(Person.format(savedPerson));
-  });
+  Person.find({ name: body.name })
+    .then(result => {
+      if (result.length !== 0) {
+        throw new error();
+      }
+    })
+    .then(result => {
+      person.save().then(savedPerson => {
+        res.json(Person.format(savedPerson));
+      });
+    })
+    .catch(error => {
+      res.status(409).json({ error: 'name already exits in database' });
+      console.log('name not added. It already exits in database');
+    });
 });
 
 app.put('/api/persons/:id', (req, res) => {
