@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-const url = 'mongodb://testi:testi96@ds163610.mlab.com:63610/fullstackopen-people';
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+const url = process.env.MONGODB_URI;
 
 mongoose.connect(url);
 
